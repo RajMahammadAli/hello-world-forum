@@ -18,7 +18,7 @@ export default function ({ children }) {
   const [loading, setLoading] = useState(true);
   const googleProvider = new GoogleAuthProvider();
 
-  console.log(user);
+  // console.log(user);
 
   const createUser = (email, password, displayName, photoURL) => {
     setLoading(true);
