@@ -16,7 +16,7 @@ export default function () {
         <Link to="/">Home</Link>
       </li>
       <li>
-        <Link>MemberShip</Link>
+        <Link to="/membership">MemberShip</Link>
       </li>
       <li>
         <Link>Notification</Link>
@@ -88,7 +88,7 @@ export default function () {
                   </label>
                   <li className="w-full text-center">{user?.displayName}</li>
                   <li>
-                    <Link>Dashboard</Link>
+                    <Link to="/dashboard">Dashboard</Link>
                   </li>
                   <li>
                     <button onClick={handleLogOut}>Log Out</button>
