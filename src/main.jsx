@@ -13,6 +13,7 @@ import Dashboard from "./Components/Dashboard/Dashboard.jsx";
 import MyProfile from "./Components/Dashboard/MyProfile.jsx";
 import AddPost from "./Components/Dashboard/AddPost.jsx";
 import MyPosts from "./Components/Dashboard/MyPosts.jsx";
+import Comments from "./Components/Dashboard/Comments.jsx";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       { path: "myProfile", element: <MyProfile></MyProfile> },
       { path: "addPost", element: <AddPost></AddPost> },
       { path: "myPosts", element: <MyPosts></MyPosts> },
+      { path: "comments", element: <Comments></Comments> },
     ],
   },
 ]);

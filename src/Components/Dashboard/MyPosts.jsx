@@ -36,7 +36,7 @@ const MyPosts = () => {
               {/* <Link to={`/comments/${post._id}`} className="btn btn-info mr-2">
                 Comments
               </Link> */}
-              <Link to={`/comments/`} className="btn btn-info mr-2">
+              <Link to={`/dashboard/comments`} className="btn btn-info mr-2">
                 Comments
               </Link>
               <button className="btn btn-danger" onClick={() => handleDelete()}>
