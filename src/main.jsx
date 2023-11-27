@@ -14,6 +14,7 @@ import MyProfile from "./Components/Dashboard/MyProfile.jsx";
 import AddPost from "./Components/Dashboard/AddPost.jsx";
 import MyPosts from "./Components/Dashboard/MyPosts.jsx";
 import Comments from "./Components/Dashboard/Comments.jsx";
+import PrivateRoute from "./PrivateRoute/PrivateRoute.jsx";
 
 const router = createBrowserRouter([
   {
@@ -23,14 +24,32 @@ const router = createBrowserRouter([
       { path: "/", element: <Home></Home> },
       { path: "/login", element: <LogIn></LogIn> },
       { path: "/register", element: <Register></Register> },
-      { path: "/memberShip", element: <MembershipPage></MembershipPage> },
+      {
+        path: "/memberShip",
+        element: (
+          <PrivateRoute>
+            <MembershipPage></MembershipPage>
+          </PrivateRoute>
+        ),
+      },
     ],
   },
   {
     path: "/dashboard",
-    element: <Dashboard></Dashboard>,
+    element: (
+      <PrivateRoute>
+        <Dashboard></Dashboard>
+      </PrivateRoute>
+    ),
     children: [
-      { path: "myProfile", element: <MyProfile></MyProfile> },
+      {
+        path: "myProfile",
+        element: (
+          <PrivateRoute>
+            <MyProfile></MyProfile>
+          </PrivateRoute>
+        ),
+      },
       { path: "addPost", element: <AddPost></AddPost> },
       { path: "myPosts", element: <MyPosts></MyPosts> },
       { path: "comments", element: <Comments></Comments> },
