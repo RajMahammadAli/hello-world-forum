@@ -17,6 +17,7 @@ import Comments from "./Components/Dashboard/Comments.jsx";
 import PrivateRoute from "./PrivateRoute/PrivateRoute.jsx";
 import { Helmet } from "react-helmet";
 import { HelmetProvider } from "react-helmet-async";
+import PostDetails from "./Components/PostDetails/PostDetails.jsx";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Home></Home> },
       { path: "/login", element: <LogIn></LogIn> },
       { path: "/register", element: <Register></Register> },
+      { path: "/postDetails", element: <PostDetails></PostDetails> },
 
       {
         path: "/memberShip",

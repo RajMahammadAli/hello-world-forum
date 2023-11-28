@@ -1,9 +1,18 @@
+import { useNavigate } from "react-router-dom";
 import img from "../../assets/log.jpg";
 
 export default function () {
+  const navigate = useNavigate();
+  const handleAllPosts = () => {
+    console.log("go to All Post Details");
+    navigate(`/postDetails`);
+  };
   return (
     <>
-      <div className="container mx-auto p-4">
+      <div
+        onClick={handleAllPosts}
+        className="container mx-auto p-4 cursor-pointer"
+      >
         <div className="p-4">
           <div className="card card-side bg-base-100 shadow-xl flex flex-col md:flex-row">
             <figure className="w-full md:w-64 h-64 md:h-auto md:flex-shrink-0">
