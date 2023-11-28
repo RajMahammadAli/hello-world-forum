@@ -6,6 +6,7 @@ import { AuthContext } from "../../../AuthProvider/AuthProvider";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const image_hosting_key = import.meta.env.VITE_imageHosting_KEY;
 console.log(image_hosting_key);
@@ -100,6 +101,9 @@ const Register = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Hello world | Register</title>
+      </Helmet>
       <div className="hero min-h-screen bg-base-200">
         <div className="hero-content">
           <div className="card w-full max-w-sm shadow-2xl bg-base-100">

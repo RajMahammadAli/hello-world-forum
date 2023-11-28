@@ -7,6 +7,7 @@ import { AuthContext } from "../../../AuthProvider/AuthProvider";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 // Component for the login and sign-up form
 const LogIn = () => {
@@ -71,6 +72,9 @@ const LogIn = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Hello world | LogIn</title>
+      </Helmet>
       <div className="hero min-h-screen bg-base-200">
         <div className="hero-content">
           <div className="card w-full max-w-sm shadow-2xl bg-base-100">

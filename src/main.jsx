@@ -15,6 +15,8 @@ import AddPost from "./Components/Dashboard/AddPost.jsx";
 import MyPosts from "./Components/Dashboard/MyPosts.jsx";
 import Comments from "./Components/Dashboard/Comments.jsx";
 import PrivateRoute from "./PrivateRoute/PrivateRoute.jsx";
+import { Helmet } from "react-helmet";
+import { HelmetProvider } from "react-helmet-async";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +26,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Home></Home> },
       { path: "/login", element: <LogIn></LogIn> },
       { path: "/register", element: <Register></Register> },
+
       {
         path: "/memberShip",
         element: (
@@ -50,9 +53,30 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      { path: "addPost", element: <AddPost></AddPost> },
-      { path: "myPosts", element: <MyPosts></MyPosts> },
-      { path: "comments", element: <Comments></Comments> },
+      {
+        path: "addPost",
+        element: (
+          <PrivateRoute>
+            <AddPost></AddPost>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "myPosts",
+        element: (
+          <PrivateRoute>
+            <MyPosts></MyPosts>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "comments",
+        element: (
+          <PrivateRoute>
+            <Comments></Comments>
+          </PrivateRoute>
+        ),
+      },
     ],
   },
 ]);
@@ -60,7 +84,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AuthProvider>
-      <RouterProvider router={router}></RouterProvider>
+      <HelmetProvider>
+        <RouterProvider router={router}></RouterProvider>
+      </HelmetProvider>
     </AuthProvider>
   </React.StrictMode>
 );

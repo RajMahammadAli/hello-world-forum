@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
 
 const MembershipPage = () => {
   const [isMember, setIsMember] = useState(false);
@@ -50,62 +51,67 @@ const MembershipPage = () => {
   ];
 
   return (
-    <div className="bg-gray-100 min-h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full md:w-2/3 lg:w-1/2 xl:w-1/3">
-        <h2 className="text-3xl font-semibold mb-4 text-center">
-          Membership Page
-        </h2>
+    <>
+      <Helmet>
+        <title>Hello world | MemberShip</title>
+      </Helmet>
+      <div className="bg-gray-100 min-h-screen flex items-center justify-center">
+        <div className="bg-white p-8 rounded-lg shadow-md w-full md:w-2/3 lg:w-1/2 xl:w-1/3">
+          <h2 className="text-3xl font-semibold mb-4 text-center">
+            Membership Page
+          </h2>
 
-        {!isMember ? (
-          <div>
-            <p className="text-center mb-4">
-              Choose your membership type and enjoy exclusive benefits:
-            </p>
+          {!isMember ? (
+            <div>
+              <p className="text-center mb-4">
+                Choose your membership type and enjoy exclusive benefits:
+              </p>
 
-            {/* Membership Options */}
-            <div className="flex flex-col space-y-4">
-              {membershipOptions.map((membership) => (
-                <div
-                  key={membership.type}
-                  className="border p-4 rounded-md transition duration-300 transform hover:shadow-md hover:scale-105 cursor-pointer"
-                  onClick={() => setSelectedMembership(membership.type)}
-                >
-                  <h3 className="text-xl font-semibold mb-2">
-                    {membership.type} Membership
-                  </h3>
-                  <ul className="list-disc list-inside">
-                    {membership.benefits.map((benefit, index) => (
-                      <li key={index}>{benefit}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-
-            {selectedMembership && (
-              <div className="text-center mt-4">
-                <button
-                  onClick={handleMembershipPurchase}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition duration-300"
-                >
-                  Purchase {selectedMembership} Membership
-                </button>
+              {/* Membership Options */}
+              <div className="flex flex-col space-y-4">
+                {membershipOptions.map((membership) => (
+                  <div
+                    key={membership.type}
+                    className="border p-4 rounded-md transition duration-300 transform hover:shadow-md hover:scale-105 cursor-pointer"
+                    onClick={() => setSelectedMembership(membership.type)}
+                  >
+                    <h3 className="text-xl font-semibold mb-2">
+                      {membership.type} Membership
+                    </h3>
+                    <ul className="list-disc list-inside">
+                      {membership.benefits.map((benefit, index) => (
+                        <li key={index}>{benefit}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
-            )}
-          </div>
-        ) : (
-          <div className="text-green-600 text-center">
-            <h3 className="text-2xl font-semibold mb-2">
-              Congratulations! You are now a {selectedMembership} member.
-            </h3>
-            <p>
-              Thank you for becoming a member. Enjoy your {selectedMembership}{" "}
-              Badge and enhanced posting privileges.
-            </p>
-          </div>
-        )}
+
+              {selectedMembership && (
+                <div className="text-center mt-4">
+                  <button
+                    onClick={handleMembershipPurchase}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition duration-300"
+                  >
+                    Purchase {selectedMembership} Membership
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="text-green-600 text-center">
+              <h3 className="text-2xl font-semibold mb-2">
+                Congratulations! You are now a {selectedMembership} member.
+              </h3>
+              <p>
+                Thank you for becoming a member. Enjoy your {selectedMembership}{" "}
+                Badge and enhanced posting privileges.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
