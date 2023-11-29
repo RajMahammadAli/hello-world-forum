@@ -1,20 +1,24 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Select from "react-select";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
+import { AuthContext } from "../../AuthProvider/AuthProvider";
+import { toast } from "react-toastify";
 
 export default function AddPost() {
-  const [isUpvote, setIsUpVote] = useState(false);
-  const [isDownVote, setIsDownVote] = useState(false);
+  const { user } = useContext(AuthContext);
   const [postCount, setPostCount] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
+  const navigate = useNavigate();
 
   const options = [
     { value: "chocolate", label: "Chocolate" },
     { value: "strawberry", label: "Strawberry" },
     { value: "vanilla", label: "Vanilla" },
   ];
+
+  const timestamp = new Date();
 
   const handleSelectChange = (selected) => {
     setSelectedOption(selected);
@@ -24,6 +28,8 @@ export default function AddPost() {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
+
+    const UserEmail = user?.email;
 
     // Convert formData to a plain object
     const formObject = {};
@@ -49,6 +55,30 @@ export default function AddPost() {
     console.log("Post upvote:", postUpVote);
     console.log("Post downvote:", postDownVote);
     console.log("Selected Option:", selectedValue);
+
+    axios
+      .post("http://localhost:5000/addPosts", {
+        authorImage,
+        authorName,
+        authorEmail,
+        postTitle,
+        postDescription,
+        postUpVote,
+        postDownVote,
+        selectedValue,
+        UserEmail,
+        timestamp,
+      })
+      .then((response) => {
+        console.log("Assignment submitted successfully:", response.data);
+        // Add any additional logic, such as showing a success message or redirecting
+        toast.success("Assignment submitted successfully!");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("Error submitting assignment:", error);
+        // Handle error if needed
+      });
   };
 
   useEffect(() => {
