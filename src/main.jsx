@@ -27,7 +27,12 @@ const router = createBrowserRouter([
       { path: "/", element: <Home></Home> },
       { path: "/login", element: <LogIn></LogIn> },
       { path: "/register", element: <Register></Register> },
-      { path: "/postDetails", element: <PostDetails></PostDetails> },
+      {
+        path: "/postDetails/:id",
+        element: <PostDetails></PostDetails>,
+        loader: ({ params }) =>
+          fetch(`http://localhost:5000/allPosts/${params.id}`),
+      },
 
       {
         path: "/memberShip",

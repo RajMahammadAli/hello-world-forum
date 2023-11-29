@@ -1,40 +1,41 @@
 import { useNavigate } from "react-router-dom";
 import img from "../../assets/log.jpg";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import DisplayPosts from "./DisplayPosts";
 
 export default function () {
+  const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
-  const handleAllPosts = () => {
-    console.log("go to All Post Details");
-    navigate(`/postDetails`);
+
+  console.log(posts);
+
+  useEffect(() => {
+    // Fetch posts when the component mounts
+    axios
+      .get("http://localhost:5000/allPosts") // Update the URL with your server endpoint
+      .then((response) => {
+        setPosts(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching posts:", error);
+      });
+  }, []);
+  const handleAllPosts = (id) => {
+    console.log("go to All Post Details", id);
+    navigate(`/postDetails/${id}`);
   };
   return (
     <>
-      <div
-        onClick={handleAllPosts}
-        className="container mx-auto p-4 cursor-pointer"
-      >
-        <div className="p-4">
-          <div className="card card-side bg-base-100 shadow-xl flex flex-col md:flex-row">
-            <figure className="w-full md:w-64 h-64 md:h-auto md:flex-shrink-0">
-              <img
-                src={img}
-                alt="Movie"
-                className="object-cover w-full h-full md:w-64 md:h-64"
-              />
-            </figure>
-            <div className="card-body flex flex-col justify-between">
-              <div>
-                <h2 className="card-title">Post title</h2>
-                <p>Click the button to watch on Jetflix app.</p>
-              </div>
-              <div className="w-80 card-actions flex flex-wrap justify-start">
-                <p>Tags</p>
-                <p>Time</p>
-                <p>Comment Count</p>
-                <p>Votes Count</p>
-              </div>
-            </div>
-          </div>
+      <div className="container mx-auto p-4 cursor-pointer">
+        <div className="grid grid-cols-1  gap-4">
+          {posts.map((post) => (
+            <DisplayPosts
+              key={post._id}
+              post={post}
+              handleAllPosts={handleAllPosts}
+            ></DisplayPosts>
+          ))}
         </div>
       </div>
     </>

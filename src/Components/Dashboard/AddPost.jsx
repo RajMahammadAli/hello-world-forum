@@ -13,9 +13,11 @@ export default function AddPost() {
   const navigate = useNavigate();
 
   const options = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
+    { value: "Inspiration", label: "Inspiration" },
+    { value: "Technology", label: "Technology" },
+    { value: "Science", label: "Science" },
+    { value: "Travel", label: "Travel" },
+    { value: "Food and Cooking", label: "Food and Cooking" },
   ];
 
   const timestamp = new Date();
