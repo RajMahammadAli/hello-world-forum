@@ -6,6 +6,7 @@ import DisplayPosts from "./DisplayPosts";
 
 export default function () {
   const [posts, setPosts] = useState([]);
+
   const navigate = useNavigate();
 
   console.log(posts);

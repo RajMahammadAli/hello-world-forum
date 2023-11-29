@@ -1,10 +1,13 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { BiSolidUpvote, BiSolidDownvote } from "react-icons/bi";
 import { CiShare2 } from "react-icons/ci";
 import { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 export default function () {
   const postById = useLoaderData();
-  const [comment, setComment] = useState();
+
+  const navigate = useNavigate();
   const {
     authorImage,
     authorName,
@@ -24,6 +27,24 @@ export default function () {
     e.preventDefault();
 
     console.log(e.target.comment.value);
+
+    const comments = e.target.comment.value;
+
+    axios
+      .post("http://localhost:5000/comments", {
+        postTitle,
+        comments,
+      })
+      .then((response) => {
+        console.log("comments submitted successfully:", response.data);
+        // Add any additional logic, such as showing a success message or redirecting
+        toast.success("Comments submitted successfully!");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("Error submitting comments:", error);
+        // Handle error if needed
+      });
   };
 
   // const handleCommentChange = (e) => {
