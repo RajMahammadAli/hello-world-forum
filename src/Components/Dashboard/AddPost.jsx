@@ -181,6 +181,7 @@ export default function AddPost() {
                       name="upvote"
                       defaultValue="0"
                       min="0"
+                      max="0"
                       className="w-full input input-bordered"
                       required
                     />
@@ -192,6 +193,7 @@ export default function AddPost() {
                       name="downvote"
                       defaultValue="0"
                       min="0"
+                      max="0"
                       className="w-full input input-bordered"
                       required
                     />

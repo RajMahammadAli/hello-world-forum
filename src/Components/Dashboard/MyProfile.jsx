@@ -47,7 +47,7 @@ export default function Profile() {
                   className="w-6 h-6"
                 />
               )}
-              {user?.badge === "Silver" && (
+              {user?.email === "Bronze" && (
                 <img
                   src="silver-badge-image-url"
                   alt="Silver Badge"

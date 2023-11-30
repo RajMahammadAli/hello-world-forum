@@ -1,14 +1,25 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { BiSolidUpvote, BiSolidDownvote } from "react-icons/bi";
 import { CiShare2 } from "react-icons/ci";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-export default function () {
-  const postById = useLoaderData();
+import { AuthContext } from "../../AuthProvider/AuthProvider";
 
+import { FacebookShareButton } from "react-share";
+export default function () {
+  const { user } = useContext(AuthContext);
+  const postById = useLoaderData();
+  const [upVoteCount, setUpVoteCount] = useState(
+    parseInt(postById.postUpVote) || 0
+  );
+  const [downVoteCount, setDownVoteCount] = useState(
+    parseInt(postById.postDownVote) || 0
+  );
   const navigate = useNavigate();
+
   const {
+    _id,
     authorImage,
     authorName,
     authorEmail,
@@ -21,14 +32,11 @@ export default function () {
     timestamp,
   } = postById;
   const formattedTime = new Date(timestamp).toLocaleString();
-  console.log(postById);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    console.log(e.target.comment.value);
-
-    const comments = e.target.comment.value;
+    const form = e.target;
+    const comments = form.comment.value;
 
     axios
       .post("http://localhost:5000/comments", {
@@ -47,9 +55,49 @@ export default function () {
       });
   };
 
-  // const handleCommentChange = (e) => {
-  //   setComment(e.target.value);
-  // };
+  const handleUpVote = () => {
+    console.log("up vote clicked");
+
+    // Update the MongoDB database with the new upVoteCount
+    const updatedUpVoteData = {
+      postUpVote: upVoteCount + 1,
+    };
+
+    axios
+      .put(`http://localhost:5000/allPosts/${_id}`, updatedUpVoteData)
+      .then((response) => {
+        console.log("Update successful");
+        // Use the updated count from the server response
+        setUpVoteCount((prevCount) => prevCount + 1);
+      })
+      .catch((error) => {
+        console.error("Error updating data:", error);
+        // Handle error, if needed
+      });
+  };
+
+  const handleDownVote = () => {
+    console.log("down vote clicked");
+
+    // Update the MongoDB database with the new downVoteCount
+    const updatedDownVoteData = {
+      postDownVote: downVoteCount + 1,
+    };
+
+    axios
+      .put(`http://localhost:5000/allPosts/${_id}`, updatedDownVoteData)
+      .then((response) => {
+        console.log("Update successful");
+        // Use the updated count from the server response
+        setDownVoteCount((prevCount) => prevCount + 1);
+      })
+      .catch((error) => {
+        console.error("Error updating data:", error);
+        // Handle error, if needed
+      });
+  };
+
+  const shareUrl = `http://localhost:5173/postDetails/${_id}`;
 
   return (
     <>
@@ -65,14 +113,18 @@ export default function () {
             <div className="lg:flex gap-2 justify-start items-center">
               <h2 className="card-title">{selectedValue}</h2>
               <h2 className="card-title">{formattedTime}</h2>
-              <h2 className="card-title">
+              <h2 className="card-title" onClick={handleUpVote}>
                 <BiSolidUpvote />
+                {upVoteCount}
               </h2>
-              <h2 className="card-title">
+              <h2 className="card-title" onClick={handleDownVote}>
                 <BiSolidDownvote />
+                {downVoteCount}
               </h2>
               <h2 className="card-title">
-                <CiShare2 />
+                <FacebookShareButton url={shareUrl}>
+                  <CiShare2 />
+                </FacebookShareButton>
               </h2>
             </div>
           </div>
@@ -94,7 +146,9 @@ export default function () {
               </div>
 
               <div className="form-control w-20 mt-6">
-                <button className="btn btn-primary">comment</button>
+                <button disabled={!user?.email} className="btn btn-primary">
+                  comment
+                </button>
               </div>
             </form>
           </div>

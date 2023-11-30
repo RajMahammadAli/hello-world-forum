@@ -5,7 +5,7 @@ const Announcement = () => {
   return (
     <>
       <Helmet>
-        <title>Your Site Name | Announcement</title>
+        <title>Hello world | Announcement</title>
       </Helmet>
       <div className="container mx-auto mt-8">
         <h1 className="text-3xl font-bold mb-6 text-center">Announcement</h1>

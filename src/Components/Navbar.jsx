@@ -94,7 +94,10 @@ export default function () {
                     </label>
                     <li className="w-full text-center">{user?.displayName}</li>
                     <li>
-                      <Link to="/dashboard/myProfile">Dashboard</Link>
+                      <Link to="/dashboard/myProfile">User Dashboard</Link>
+                    </li>
+                    <li>
+                      <Link to="/dashboard/myProfile">Admin Dashboard</Link>
                     </li>
                     <li>
                       <button onClick={handleLogOut}>Log Out</button>
