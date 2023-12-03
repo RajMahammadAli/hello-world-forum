@@ -10,12 +10,14 @@ export default function Profile() {
   const { user } = useContext(AuthContext);
   const [dbUser, setDbUser] = useState([]);
   const [posts, setPosts] = useState([]);
-  console.log(posts);
+  console.log(dbUser);
 
   useEffect(() => {
     // Fetch posts when the component mounts
     axios
-      .get(`https://hello-world-server-side.vercel.app?email=${user.email}`)
+      .get(
+        `https://hello-world-server-side.vercel.app/users?email=${user.email}`
+      )
       .then((response) => {
         setDbUser(response.data);
       })
