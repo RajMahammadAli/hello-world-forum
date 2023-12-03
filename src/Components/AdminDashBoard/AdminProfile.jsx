@@ -17,7 +17,7 @@ export default function Profile() {
   useEffect(() => {
     // Fetch posts when the component mounts
     axios
-      .get(`http://localhost:5000/users?email=${user.email}`)
+      .get(`https://hello-world-server-side.vercel.app?email=${user.email}`)
       .then((response) => {
         setDbUser(response.data);
       })
@@ -28,7 +28,7 @@ export default function Profile() {
   useEffect(() => {
     // Fetch posts when the component mounts
     axios
-      .get(`http://localhost:5000/users`)
+      .get(`https://hello-world-server-side.vercel.app`)
       .then((response) => {
         setTotalDbUser(response.data);
       })

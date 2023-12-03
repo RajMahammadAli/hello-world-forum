@@ -52,7 +52,7 @@ const Register = () => {
           createUser(data.email, data.password, data.name, imageUrl)
             .then(() => {
               axios
-                .post("http://localhost:5000/users", {
+                .post("https://hello-world-server-side.vercel.app", {
                   name: data.name,
                   email: data.email,
                   image: imageUrl,

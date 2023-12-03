@@ -23,7 +23,7 @@ export default function () {
 
     axios
       .put(
-        `http://localhost:5000/users/aboutMe/${loadedDbUsers._id}`,
+        `https://hello-world-server-side.vercel.app/aboutMe/${loadedDbUsers._id}`,
         aboutMeInfo
       )
       .then((response) => {

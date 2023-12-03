@@ -13,7 +13,7 @@ export default function () {
         const user = result.user;
         console.log(user);
         axios
-          .post("http://localhost:5000/users", {
+          .post("https://hello-world-server-side.vercel.app", {
             name: user.displayName,
             email: user.email,
             image: user.photoURL,

@@ -90,7 +90,7 @@ export default function AddPost() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/users?email=${user.email}`)
+      .get(`https://hello-world-server-side.vercel.app?email=${user.email}`)
       .then((response) => {
         setUsers(response.data);
 

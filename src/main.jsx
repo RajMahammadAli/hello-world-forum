@@ -101,7 +101,7 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/users/${params.id}`),
+          fetch(`https://hello-world-server-side.vercel.app/${params.id}`),
       },
     ],
   },

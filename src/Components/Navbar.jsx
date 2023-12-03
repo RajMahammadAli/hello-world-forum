@@ -15,7 +15,7 @@ export default function () {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/users`)
+      .get(`https://hello-world-server-side.vercel.app`)
       .then((response) => {
         const userByEmail = response.data.find(
           (item) => item.email === user?.email
