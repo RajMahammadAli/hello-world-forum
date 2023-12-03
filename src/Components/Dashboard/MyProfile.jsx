@@ -26,7 +26,9 @@ export default function Profile() {
   useEffect(() => {
     // Fetch posts when the component mounts
     axios
-      .get(`http://localhost:5000/allPosts?email=${user.email}`)
+      .get(
+        `https://hello-world-server-side.vercel.app/allPosts?email=${user.email}`
+      )
       .then((response) => {
         setPosts(
           response.data

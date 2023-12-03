@@ -8,7 +8,7 @@ const Announcement = () => {
   useEffect(() => {
     // Fetch posts when the component mounts
     axios
-      .get("http://localhost:5000/announcement")
+      .get("https://hello-world-server-side.vercel.app/announcement")
       .then((response) => {
         setAnnouncement(response.data);
       })

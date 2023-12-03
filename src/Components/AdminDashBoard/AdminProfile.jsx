@@ -17,7 +17,9 @@ export default function Profile() {
   useEffect(() => {
     // Fetch posts when the component mounts
     axios
-      .get(`https://hello-world-server-side.vercel.app?email=${user.email}`)
+      .get(
+        `https://hello-world-server-side.vercel.app/users?email=${user.email}`
+      )
       .then((response) => {
         setDbUser(response.data);
       })
@@ -28,7 +30,7 @@ export default function Profile() {
   useEffect(() => {
     // Fetch posts when the component mounts
     axios
-      .get(`https://hello-world-server-side.vercel.app`)
+      .get(`https://hello-world-server-side.vercel.app/users`)
       .then((response) => {
         setTotalDbUser(response.data);
       })
@@ -40,7 +42,7 @@ export default function Profile() {
   useEffect(() => {
     // Fetch posts when the component mounts
     axios
-      .get("http://localhost:5000/allPosts")
+      .get("https://hello-world-server-side.vercel.app/allPosts")
       .then((response) => {
         const allPosts = response.data;
         setPosts(allPosts);
@@ -52,7 +54,7 @@ export default function Profile() {
   useEffect(() => {
     // Fetch posts when the component mounts
     axios
-      .get("http://localhost:5000/comments")
+      .get("https://hello-world-server-side.vercel.app/comments")
       .then((response) => {
         const allPosts = response.data;
         setComments(allPosts);

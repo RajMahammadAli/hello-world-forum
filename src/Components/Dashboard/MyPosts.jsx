@@ -17,7 +17,9 @@ const MyPosts = () => {
   useEffect(() => {
     // Fetch user posts from the server
     axios
-      .get(`http://localhost:5000/allPosts?email=${user.email}`)
+      .get(
+        `https://hello-world-server-side.vercel.app/allPosts?email=${user.email}`
+      )
       .then((response) => {
         setUserPosts(response.data); // Assuming the response contains an array of user's posts
       })
@@ -40,7 +42,7 @@ const MyPosts = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://localhost:5000/allPosts/${id}`)
+          .delete(`https://hello-world-server-side.vercel.app/allPosts/${id}`)
           .then((response) => {
             console.log(response.data);
             if (response.data.deletedCount > 0) {

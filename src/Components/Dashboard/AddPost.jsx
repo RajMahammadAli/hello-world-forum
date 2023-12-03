@@ -62,7 +62,7 @@ export default function AddPost() {
     console.log("Selected Option:", selectedValue);
 
     axios
-      .post("http://localhost:5000/addPosts", {
+      .post("https://hello-world-server-side.vercel.app/addPosts", {
         authorImage,
         authorName,
         authorEmail,
@@ -90,7 +90,9 @@ export default function AddPost() {
 
   useEffect(() => {
     axios
-      .get(`https://hello-world-server-side.vercel.app?email=${user.email}`)
+      .get(
+        `https://hello-world-server-side.vercel.app/users?email=${user.email}`
+      )
       .then((response) => {
         setUsers(response.data);
 
@@ -103,7 +105,9 @@ export default function AddPost() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/allPosts?email=${user.email}`)
+      .get(
+        `https://hello-world-server-side.vercel.app/allPosts?email=${user.email}`
+      )
       .then((response) => {
         setPostCount(response.data.length);
       })

@@ -49,7 +49,7 @@ export default function () {
     };
 
     axios
-      .post("http://localhost:5000/comments", commentsInfo)
+      .post("https://hello-world-server-side.vercel.app/comments", commentsInfo)
       .then((response) => {
         console.log("comments submitted successfully:", response.data);
         // Add any additional logic, such as showing a success message or redirecting
@@ -67,7 +67,7 @@ export default function () {
   const sendReactionDataToServer = async (like, dislike) => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/allPosts/vote/${_id}`,
+        `https://hello-world-server-side.vercel.app/allPosts/vote/${_id}`,
         {
           postUpVote: like,
           postDownVote: dislike,

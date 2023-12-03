@@ -38,7 +38,9 @@ const router = createBrowserRouter([
         path: "/postDetails/:id",
         element: <PostDetails></PostDetails>,
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/allPosts/${params.id}`),
+          fetch(
+            `https://hello-world-server-side.vercel.app/allPosts/${params.id}`
+          ),
       },
 
       {
@@ -91,7 +93,9 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
         loader: ({ params }) =>
-          fetch(`http://localhost:5000/allPosts/${params.id}`),
+          fetch(
+            `https://hello-world-server-side.vercel.app/allPosts/${params.id}`
+          ),
       },
       {
         path: "aboutme/:id",
@@ -101,7 +105,9 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
         loader: ({ params }) =>
-          fetch(`https://hello-world-server-side.vercel.app/${params.id}`),
+          fetch(
+            `https://hello-world-server-side.vercel.app/users/${params.id}`
+          ),
       },
     ],
   },

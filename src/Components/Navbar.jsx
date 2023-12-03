@@ -15,7 +15,7 @@ export default function () {
 
   useEffect(() => {
     axios
-      .get(`https://hello-world-server-side.vercel.app`)
+      .get(`https://hello-world-server-side.vercel.app/users`)
       .then((response) => {
         const userByEmail = response.data.find(
           (item) => item.email === user?.email
@@ -34,7 +34,7 @@ export default function () {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/announcement`)
+      .get(`https://hello-world-server-side.vercel.app/announcement`)
       .then((response) => {
         setAnnouncementLength(response.data);
       })

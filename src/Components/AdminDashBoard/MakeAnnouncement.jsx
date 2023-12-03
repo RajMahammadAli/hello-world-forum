@@ -23,7 +23,10 @@ export default function () {
     console.log("hello announcement", announcementInfo);
 
     axios
-      .post("http://localhost:5000/announcement", announcementInfo)
+      .post(
+        "https://hello-world-server-side.vercel.app/announcement",
+        announcementInfo
+      )
       .then((response) => {
         console.log("Announcement submitted successfully:", response.data);
         // Add any additional logic, such as showing a success message or redirecting

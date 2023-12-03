@@ -7,7 +7,7 @@ export default function ({ post, handleAllPosts }) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/comments`)
+      .get(`https://hello-world-server-side.vercel.app/comments`)
       .then((response) => {
         const matchingComments = response.data.filter(
           (comment) => comment.postTitle === post.postTitle

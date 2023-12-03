@@ -17,7 +17,9 @@ const MembershipPage = () => {
 
   useEffect(() => {
     axios
-      .get(`https://hello-world-server-side.vercel.app?email=${user.email}`)
+      .get(
+        `https://hello-world-server-side.vercel.app/users?email=${user.email}`
+      )
       .then((response) => {
         setDbUser(response.data);
       })
@@ -50,7 +52,7 @@ const MembershipPage = () => {
       if (result.isConfirmed) {
         axios
           .put(
-            `https://hello-world-server-side.vercel.app/badgeInfo/${id}`,
+            `https://hello-world-server-side.vercel.app/users/badgeInfo/${id}`,
             badgeInfo
           )
           .then((response) => {

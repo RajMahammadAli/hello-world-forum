@@ -12,7 +12,7 @@ export default function () {
   useEffect(() => {
     // Fetch posts when the component mounts
     axios
-      .get("http://localhost:5000/allPosts")
+      .get("https://hello-world-server-side.vercel.app/allPosts")
       .then((response) => {
         const allPosts = response.data;
         setPosts(

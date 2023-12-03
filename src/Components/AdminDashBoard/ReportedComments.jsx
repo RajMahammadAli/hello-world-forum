@@ -9,7 +9,7 @@ export default function () {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/comments`)
+      .get(`https://hello-world-server-side.vercel.app/comments`)
       .then((response) => {
         setComments(response.data);
       })
@@ -32,7 +32,7 @@ export default function () {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://localhost:5000/comments/${id}`)
+          .delete(`https://hello-world-server-side.vercel.app/comments/${id}`)
           .then((response) => {
             console.log(response.data);
             if (response.data.deletedCount > 0) {

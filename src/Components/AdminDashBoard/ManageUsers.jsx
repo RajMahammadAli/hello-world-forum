@@ -15,7 +15,7 @@ export default function () {
   useEffect(() => {
     // Fetch posts when the component mounts
     axios
-      .get(`https://hello-world-server-side.vercel.app`)
+      .get(`https://hello-world-server-side.vercel.app/users`)
       .then((response) => {
         setDbUser(response.data);
       })
@@ -30,7 +30,7 @@ export default function () {
     const search = form.search.value;
 
     axios
-      .get(`https://hello-world-server-side.vercel.app?name=${search}`)
+      .get(`https://hello-world-server-side.vercel.app/users?name=${search}`)
       .then((response) => {
         setDbUser(response.data);
       })
@@ -65,7 +65,10 @@ export default function () {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .put(`https://hello-world-server-side.vercel.app/${id}`, roleInfo)
+          .put(
+            `https://hello-world-server-side.vercel.app/users/${id}`,
+            roleInfo
+          )
           .then((response) => {
             console.log(response.data);
             if (response.data.modifiedCount > 0) {

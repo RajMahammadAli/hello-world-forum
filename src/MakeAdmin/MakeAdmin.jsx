@@ -12,7 +12,9 @@ export default function PrivateRoute({ children }) {
   useEffect(() => {
     if (user?.email) {
       axios
-        .get(`https://hello-world-server-side.vercel.app?email=${user.email}`)
+        .get(
+          `https://hello-world-server-side.vercel.app/users?email=${user.email}`
+        )
         .then((response) => {
           const userByEmail = response.data[0]; // Assuming user data is an array
 

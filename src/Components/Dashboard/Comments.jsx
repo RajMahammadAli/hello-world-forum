@@ -10,7 +10,7 @@ const Comments = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/comments`)
+      .get(`https://hello-world-server-side.vercel.app/comments`)
       .then((response) => {
         const matchingComments = response.data.filter(
           (comment) => comment.postTitle === allPosts.postTitle
@@ -28,7 +28,10 @@ const Comments = () => {
       reported: true,
     };
     axios
-      .put(`http://localhost:5000/comments/${index}`, updateFeedback)
+      .put(
+        `https://hello-world-server-side.vercel.app/comments/${index}`,
+        updateFeedback
+      )
       .then((response) => {
         console.log("role updated:", response.data.modifiedCount);
         if (response.data.modifiedCount > 0) {
@@ -46,7 +49,10 @@ const Comments = () => {
       reported: false,
     };
     axios
-      .put(`http://localhost:5000/comments/${index}`, updateFeedback)
+      .put(
+        `https://hello-world-server-side.vercel.app/comments/${index}`,
+        updateFeedback
+      )
       .then((response) => {
         console.log("role updated:", response.data.modifiedCount);
         if (response.data.modifiedCount > 0) {
