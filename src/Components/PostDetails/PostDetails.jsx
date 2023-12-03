@@ -1,7 +1,7 @@
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { BiSolidUpvote, BiSolidDownvote } from "react-icons/bi";
 import { CiShare2 } from "react-icons/ci";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../AuthProvider/AuthProvider";
@@ -10,13 +10,15 @@ import { FacebookShareButton } from "react-share";
 export default function () {
   const { user } = useContext(AuthContext);
   const postById = useLoaderData();
-  const [upVoteCount, setUpVoteCount] = useState(
-    parseInt(postById.postUpVote) || 0
+  const [likeCount, setLikeCount] = useState(parseInt(postById.postUpVote));
+  const [dislikeCount, setDislikeCount] = useState(
+    parseInt(postById.postDownVote)
   );
-  const [downVoteCount, setDownVoteCount] = useState(
-    parseInt(postById.postDownVote) || 0
-  );
+  const [activeBtn, setActiveBtn] = useState("none");
+
   const navigate = useNavigate();
+
+  console.log(user?.email);
 
   const {
     _id,
@@ -38,11 +40,16 @@ export default function () {
     const form = e.target;
     const comments = form.comment.value;
 
+    const commentsInfo = {
+      postTitle: postTitle,
+      comments: comments,
+      commenterEmail: user?.email,
+      feedback: "",
+      reported: false,
+    };
+
     axios
-      .post("http://localhost:5000/comments", {
-        postTitle,
-        comments,
-      })
+      .post("http://localhost:5000/comments", commentsInfo)
       .then((response) => {
         console.log("comments submitted successfully:", response.data);
         // Add any additional logic, such as showing a success message or redirecting
@@ -55,49 +62,61 @@ export default function () {
       });
   };
 
-  const handleUpVote = () => {
-    console.log("up vote clicked");
-
-    // Update the MongoDB database with the new upVoteCount
-    const updatedUpVoteData = {
-      postUpVote: upVoteCount + 1,
-    };
-
-    axios
-      .put(`http://localhost:5000/allPosts/${_id}`, updatedUpVoteData)
-      .then((response) => {
-        console.log("Update successful");
-        // Use the updated count from the server response
-        setUpVoteCount((prevCount) => prevCount + 1);
-      })
-      .catch((error) => {
-        console.error("Error updating data:", error);
-        // Handle error, if needed
-      });
-  };
-
-  const handleDownVote = () => {
-    console.log("down vote clicked");
-
-    // Update the MongoDB database with the new downVoteCount
-    const updatedDownVoteData = {
-      postDownVote: downVoteCount + 1,
-    };
-
-    axios
-      .put(`http://localhost:5000/allPosts/${_id}`, updatedDownVoteData)
-      .then((response) => {
-        console.log("Update successful");
-        // Use the updated count from the server response
-        setDownVoteCount((prevCount) => prevCount + 1);
-      })
-      .catch((error) => {
-        console.error("Error updating data:", error);
-        // Handle error, if needed
-      });
-  };
-
   const shareUrl = `http://localhost:5173/postDetails/${_id}`;
+
+  const sendReactionDataToServer = async (like, dislike) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/allPosts/vote/${_id}`,
+        {
+          postUpVote: like,
+          postDownVote: dislike,
+          usersId: [_id],
+        }
+      );
+
+      // Handle the server response if needed
+      console.log(response.data);
+    } catch (error) {
+      // Handle the error
+      console.error("Error sending data to server:", error);
+    }
+  };
+
+  const handleReactionClick = (reaction) => {
+    if (activeBtn === "none") {
+      if (reaction === "like") {
+        setActiveBtn("like");
+        setLikeCount((prev) => prev + 1);
+        sendReactionDataToServer(likeCount + 1, dislikeCount);
+      } else if (reaction === "dislike") {
+        setActiveBtn("dislike");
+        setDislikeCount((prev) => prev + 1);
+        sendReactionDataToServer(likeCount, dislikeCount + 1);
+      }
+    } else if (activeBtn === reaction) {
+      if (reaction === "like") {
+        setLikeCount((prev) => prev - 1);
+        sendReactionDataToServer(likeCount - 1, dislikeCount);
+      } else if (reaction === "dislike") {
+        setDislikeCount((prev) => prev - 1);
+        sendReactionDataToServer(likeCount, dislikeCount - 1);
+      }
+      setActiveBtn("none");
+    } else if (activeBtn !== reaction) {
+      if (reaction === "like") {
+        setLikeCount((prev) => prev + 1);
+        setDislikeCount((prev) => prev - 1);
+        sendReactionDataToServer(likeCount + 1, dislikeCount - 1);
+        setActiveBtn("like");
+      } else if (reaction === "dislike") {
+        setDislikeCount((prev) => prev + 1);
+        setLikeCount((prev) => prev - 1);
+        sendReactionDataToServer(likeCount - 1, dislikeCount + 1);
+        setActiveBtn("dislike");
+      }
+    }
+  };
 
   return (
     <>
@@ -113,13 +132,19 @@ export default function () {
             <div className="lg:flex gap-2 justify-start items-center">
               <h2 className="card-title">{selectedValue}</h2>
               <h2 className="card-title">{formattedTime}</h2>
-              <h2 className="card-title" onClick={handleUpVote}>
+              <h2
+                className="card-title"
+                onClick={() => handleReactionClick("like")}
+              >
                 <BiSolidUpvote />
-                {upVoteCount}
+                {likeCount}
               </h2>
-              <h2 className="card-title" onClick={handleDownVote}>
+              <h2
+                className="card-title"
+                onClick={() => handleReactionClick("dislike")}
+              >
                 <BiSolidDownvote />
-                {downVoteCount}
+                {dislikeCount}
               </h2>
               <h2 className="card-title">
                 <FacebookShareButton url={shareUrl}>

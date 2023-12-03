@@ -1,15 +1,23 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
+import { AuthContext } from "../../AuthProvider/AuthProvider";
+import DisplayMyPosts from "./DisplayMyPosts";
+import Swal from "sweetalert2";
 
 const MyPosts = () => {
+  const { user } = useContext(AuthContext);
   const [userPosts, setUserPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  console.log(userPosts);
 
   useEffect(() => {
     // Fetch user posts from the server
     axios
-      .get("API_ENDPOINT_TO_GET_USER_POSTS")
+      .get(`http://localhost:5000/allPosts?email=${user.email}`)
       .then((response) => {
         setUserPosts(response.data); // Assuming the response contains an array of user's posts
       })
@@ -17,6 +25,55 @@ const MyPosts = () => {
         console.error("Error fetching user posts:", error);
       });
   }, []);
+
+  const handleDelete = (id) => {
+    console.log("dashboard comments delete button clicked", id);
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`http://localhost:5000/allPosts/${id}`)
+          .then((response) => {
+            console.log(response.data);
+            if (response.data.deletedCount > 0) {
+              setUserPosts(response.data);
+              Swal.fire({
+                title: "Deleted!",
+                text: "Your file has been deleted.",
+                icon: "success",
+              });
+            }
+          })
+          .catch((error) => {
+            if (axios.isAxiosError(error) && error.response?.status === 403) {
+              Swal.fire({
+                title: "Access Denied",
+                text: "You don't have permission to delete this assignment.",
+                icon: "error",
+              });
+            } else {
+              console.error("Error deleting assignments:", error);
+            }
+          });
+      }
+    });
+  };
+
+  const nextPage = () => {
+    setCurrentPage((prev) => prev + 1);
+  };
+
+  const prevPage = () => {
+    setCurrentPage((prev) => prev - 1);
+  };
 
   return (
     <>
@@ -34,26 +91,39 @@ const MyPosts = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td className="border-b p-2 text-center">title</td>
-              <td className="border-b p-2 text-center">votes</td>
-              <td className="border-b p-2 grid gap-4 justify-center">
-                {/* <Link to={`/comments/${post._id}`} className="btn btn-info mr-2">
-                Comments
-              </Link> */}
-                <Link to={`/dashboard/comments`} className="btn btn-info mr-2">
-                  Comments
-                </Link>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleDelete()}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
+            {userPosts
+              ?.slice(
+                (currentPage - 1) * itemsPerPage,
+                currentPage * itemsPerPage
+              )
+              .map((post) => (
+                <DisplayMyPosts
+                  key={post._id}
+                  post={post}
+                  handleDelete={handleDelete}
+                ></DisplayMyPosts>
+              ))}
           </tbody>
         </table>
+
+        <div className="flex justify-center my-4">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 rounded"
+            onClick={prevPage}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mx-2 rounded"
+            onClick={nextPage}
+            disabled={
+              currentPage === Math.ceil(userPosts.length / itemsPerPage)
+            }
+          >
+            Next
+          </button>
+        </div>
       </div>
     </>
   );

@@ -21,8 +21,6 @@ export default function ({ post, handleAllPosts }) {
       });
   }, []);
 
-  console.log(comments);
-
   return (
     <>
       <div

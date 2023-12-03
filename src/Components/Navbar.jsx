@@ -1,13 +1,51 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../AuthProvider/AuthProvider";
+import axios from "axios";
+import { TfiAnnouncement } from "react-icons/tfi";
 
 export default function () {
   const { user, userLogOut } = useContext(AuthContext);
+  const [announcementlength, setAnnouncementLength] = useState([]);
+  const [dbUser, setDbUser] = useState([]);
+
+  const logo = `https://i.ibb.co/DVJ3CFG/talk-Trove2.png`;
+
+  console.log(dbUser.role);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/users`)
+      .then((response) => {
+        const userByEmail = response.data.find(
+          (item) => item.email === user?.email
+        );
+
+        if (userByEmail) {
+          setDbUser(userByEmail);
+        } else {
+          console.warn("User not found in response data.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
+  }, [user?.email]);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/announcement`)
+      .then((response) => {
+        setAnnouncementLength(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching comments:", error);
+      });
+  }, []);
+
   const handleLogOut = () => {
     userLogOut();
   };
-  const logo = `https://i.ibb.co/xG7j65Z/carlogo.png`;
 
   const navlinks = (
     <>
@@ -18,7 +56,12 @@ export default function () {
         <Link to="/membership">Membership</Link>
       </li>
       <li>
-        <Link>Notification</Link>
+        <button className="btn">
+          <TfiAnnouncement />
+          <div className="badge badge-secondary">
+            {announcementlength.length}
+          </div>
+        </button>
       </li>
       {user ? (
         <li>
@@ -63,7 +106,9 @@ export default function () {
             <Link to="/" className="lg:hidden">
               <img src={logo} alt="Logo" className="w-8 h-8" />
             </Link>
-            <a className="hidden lg:block">Hello World</a>
+            <div>
+              <img className="w-28 hidden lg:block" src={logo} />
+            </div>
           </div>
           <div className="navbar-center hidden lg:flex">
             <ul className="menu menu-horizontal px-1">{navlinks}</ul>
@@ -96,9 +141,13 @@ export default function () {
                     <li>
                       <Link to="/dashboard/myProfile">User Dashboard</Link>
                     </li>
-                    <li>
-                      <Link to="/dashboard/myProfile">Admin Dashboard</Link>
-                    </li>
+                    {dbUser.role === "admin" && (
+                      <li>
+                        <Link to="/adminDashboard/adminProfile">
+                          Admin Dashboard
+                        </Link>
+                      </li>
+                    )}
                     <li>
                       <button onClick={handleLogOut}>Log Out</button>
                     </li>

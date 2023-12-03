@@ -1,29 +1,61 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { useLoaderData } from "react-router-dom";
 
 const Comments = () => {
-  const [comments, setComments] = useState([
-    {
-      email: "ali.rc.raj@gmail.com",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      feedback: "",
-      reported: false,
-    },
-    // Add more comments as needed
-  ]);
-
+  const allPosts = useLoaderData();
+  const [comments, setComments] = useState([]);
   const [selectedComment, setSelectedComment] = useState(null);
 
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/comments`)
+      .then((response) => {
+        const matchingComments = response.data.filter(
+          (comment) => comment.postTitle === allPosts.postTitle
+        );
+        setComments(matchingComments);
+      })
+      .catch((error) => {
+        console.error("Error fetching comments:", error);
+      });
+  }, []);
+
   const handleFeedbackChange = (index, feedback) => {
-    const updatedComments = [...comments];
-    updatedComments[index].feedback = feedback;
-    setComments(updatedComments);
+    const updateFeedback = {
+      feedback: feedback,
+      reported: true,
+    };
+    axios
+      .put(`http://localhost:5000/comments/${index}`, updateFeedback)
+      .then((response) => {
+        console.log("role updated:", response.data.modifiedCount);
+        if (response.data.modifiedCount > 0) {
+          setComments(response.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating role:", error);
+      });
   };
 
   const handleReportClick = (index) => {
-    const updatedComments = [...comments];
-    updatedComments[index].reported = true;
-    setComments(updatedComments);
+    const updateFeedback = {
+      feedback: comments[0].feedback,
+      reported: false,
+    };
+    axios
+      .put(`http://localhost:5000/comments/${index}`, updateFeedback)
+      .then((response) => {
+        console.log("role updated:", response.data.modifiedCount);
+        if (response.data.modifiedCount > 0) {
+          setComments(response.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating role:", error);
+      });
   };
 
   const handleReadMoreClick = (comment) => {
@@ -53,16 +85,13 @@ const Comments = () => {
             </thead>
             <tbody>
               {comments.map((comment, index) => (
-                <tr
-                  key={index}
-                  className={comment.reported ? "bg-red-200" : ""}
-                >
-                  <td className="py-2 px-4">{comment.email}</td>
+                <tr key={index}>
+                  <td className="py-2 px-4">{comment.commenterEmail}</td>
                   <td className="py-2 px-4">
-                    {comment.text.length > 20 ? (
+                    {comment.comments.length > 20 ? (
                       <>
-                        {comment.text.substring(0, 20)}
-                        {comment.text.length > 20 ? "..." : ""}{" "}
+                        {comment.comments.substring(0, 20)}
+                        {comment.comments.length > 20 ? "..." : ""}{" "}
                         <button
                           className="text-blue-500 hover:underline"
                           onClick={() => handleReadMoreClick(comment)}
@@ -71,16 +100,16 @@ const Comments = () => {
                         </button>
                       </>
                     ) : (
-                      comment.text
+                      comment.comments
                     )}
                   </td>
                   <td className="py-2 px-4">
                     <select
                       value={comment.feedback}
                       onChange={(e) =>
-                        handleFeedbackChange(index, e.target.value)
+                        handleFeedbackChange(comment._id, e.target.value)
                       }
-                      disabled={comment.reported}
+                      disabled={comment.feedback}
                       className="w-full p-2"
                     >
                       <option value="">Select Feedback</option>
@@ -91,11 +120,10 @@ const Comments = () => {
                   </td>
                   <td className="py-2 px-4">
                     <button
-                      onClick={() => handleReportClick(index)}
-                      disabled={comment.reported}
-                      className={`btn ${
-                        comment.reported ? "btn-disabled" : "btn-danger"
-                      }`}
+                      onClick={() => handleReportClick(comment._id)}
+                      className={
+                        comment.reported ? "btn-danger" : "btn-disabled"
+                      }
                     >
                       Report
                     </button>
@@ -111,7 +139,7 @@ const Comments = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div className="bg-white p-4 max-w-lg mx-auto rounded-md">
               <p className="text-lg font-semibold mb-4">Full Comment</p>
-              <p className="text-gray-700">{selectedComment.text}</p>
+              <p className="text-gray-700">{selectedComment.comments}</p>
               <button className="btn btn-primary mt-4" onClick={closeModal}>
                 Close
               </button>

@@ -7,13 +7,14 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import SocialLogin from "../../Home/SocialLogin";
 
 const image_hosting_key = import.meta.env.VITE_imageHosting_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
 // Component for the login and sign-up form
 const Register = () => {
-  const { user, createUser, googleSignIn } = useContext(AuthContext);
+  const { createUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -50,19 +51,38 @@ const Register = () => {
           // User creation logic
           createUser(data.email, data.password, data.name, imageUrl)
             .then(() => {
-              toast("Register Successful", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              });
-
-              navigate(location?.state ? location.state : "/");
-              window.location.reload();
+              axios
+                .post("http://localhost:5000/users", {
+                  name: data.name,
+                  email: data.email,
+                  image: imageUrl,
+                  role: "user",
+                  badge: "Bronze",
+                  isAdmin: false,
+                })
+                .then((response) => {
+                  console.log(
+                    "Announcement submitted successfully:",
+                    response.data
+                  );
+                  // Add any additional logic, such as showing a success message or redirecting
+                  toast("Register Successful", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                  });
+                  navigate(location?.state ? location.state : "/");
+                  window.location.reload();
+                })
+                .catch((error) => {
+                  console.error("Error submitting announcement:", error);
+                  // Handle error if needed
+                });
             })
             .catch((error) => console.log(error));
         } catch (error) {
@@ -74,28 +94,6 @@ const Register = () => {
     } catch (error) {
       console.error("Error reading file:", error);
     }
-  };
-
-  const handleGoogleSignIn = () => {
-    googleSignIn()
-      .then((result) => {
-        const user = result.user;
-        console.log(user);
-        toast("Log In Successful", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        navigate(location?.state ? location.state : "/");
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
   };
 
   return (
@@ -194,16 +192,7 @@ const Register = () => {
               </div>
               <div className="divider">OR sign in with google</div>
               <div className="grid h-20 card  rounded-box place-items-center">
-                <div
-                  onClick={handleGoogleSignIn}
-                  className="cursor-pointer text-center mt-2"
-                >
-                  <img
-                    className="w-10 mx-auto"
-                    src="https://i.ibb.co/hCFKf5k/google-icon-2048x2048-czn3g8x8-removebg-preview.png"
-                    alt="Google Icon"
-                  />
-                </div>
+                <SocialLogin></SocialLogin>
               </div>
             </div>
           </div>

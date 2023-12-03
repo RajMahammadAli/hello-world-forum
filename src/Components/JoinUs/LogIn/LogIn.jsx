@@ -8,11 +8,12 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import SocialLogin from "../../Home/SocialLogin";
 
 // Component for the login and sign-up form
 const LogIn = () => {
   const [photoUrl, setPhotoUrl] = useState(null);
-  const { user, userSignIn, googleSignIn } = useContext(AuthContext);
+  const { user, userSignIn } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   // React Hook Form setup
@@ -41,28 +42,6 @@ const LogIn = () => {
           theme: "light",
         });
 
-        navigate(location?.state ? location.state : "/");
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  };
-
-  const handleGoogleSignIn = () => {
-    googleSignIn()
-      .then((result) => {
-        const user = result.user;
-        console.log(user);
-        toast("Log In Successful", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
         navigate(location?.state ? location.state : "/");
       })
       .catch((error) => {
@@ -143,16 +122,7 @@ const LogIn = () => {
               </div>
               <div className="divider">OR sign in with google</div>
               <div className="grid h-20 card  rounded-box place-items-center">
-                <div
-                  onClick={handleGoogleSignIn}
-                  className="cursor-pointer text-center mt-2"
-                >
-                  <img
-                    className="w-10 mx-auto"
-                    src="https://i.ibb.co/hCFKf5k/google-icon-2048x2048-czn3g8x8-removebg-preview.png"
-                    alt="Google Icon"
-                  />
-                </div>
+                <SocialLogin></SocialLogin>
               </div>
             </div>
           </div>

@@ -5,12 +5,17 @@ import axios from "axios";
 import { Helmet } from "react-helmet-async";
 import { AuthContext } from "../../AuthProvider/AuthProvider";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 export default function AddPost() {
   const { user } = useContext(AuthContext);
   const [postCount, setPostCount] = useState(0);
+  const [users, setUsers] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [isMember, setIsMember] = useState(false);
   const navigate = useNavigate();
+
+  console.log(isMember);
 
   const options = [
     { value: "Inspiration", label: "Inspiration" },
@@ -19,6 +24,8 @@ export default function AddPost() {
     { value: "Travel", label: "Travel" },
     { value: "Food and Cooking", label: "Food and Cooking" },
   ];
+
+  console.log(postCount);
 
   const timestamp = new Date();
 
@@ -31,15 +38,11 @@ export default function AddPost() {
     const form = e.target;
     const formData = new FormData(form);
 
-    const UserEmail = user?.email;
-
-    // Convert formData to a plain object
     const formObject = {};
     formData.forEach((value, key) => {
       formObject[key] = value;
     });
 
-    // Accessing specific form field values
     const authorImage = formObject.image;
     const authorName = formObject.name;
     const authorEmail = formObject.email;
@@ -47,7 +50,7 @@ export default function AddPost() {
     const postDescription = formObject.description;
     const postUpVote = formObject.upvote;
     const postDownVote = formObject.downvote;
-    const selectedValue = selectedOption ? selectedOption.value : null; // Replace with the actual name of your Select field
+    const selectedValue = selectedOption ? selectedOption.value : null;
 
     console.log("Author Name:", authorName);
     console.log("Author image:", authorImage);
@@ -68,33 +71,46 @@ export default function AddPost() {
         postUpVote,
         postDownVote,
         selectedValue,
-        UserEmail,
         timestamp,
       })
       .then((response) => {
-        console.log("Assignment submitted successfully:", response.data);
-        // Add any additional logic, such as showing a success message or redirecting
-        toast.success("Assignment submitted successfully!");
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Your post has been published",
+          showConfirmButton: false,
+          timer: 1500,
+        });
         navigate("/");
       })
       .catch((error) => {
         console.error("Error submitting assignment:", error);
-        // Handle error if needed
       });
   };
 
   useEffect(() => {
-    // Hit an API to get the post count for the logged-in user
-    // Replace 'API_URL' with the actual endpoint to get post count
     axios
-      .get("API_URL")
+      .get(`http://localhost:5000/users?email=${user.email}`)
       .then((response) => {
-        setPostCount(response.data.postCount);
+        setUsers(response.data);
+
+        setIsMember(response.data[0]?.badge === "Gold");
+      })
+      .catch((error) => {
+        console.error("Error fetching user posts:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/allPosts?email=${user.email}`)
+      .then((response) => {
+        setPostCount(response.data.length);
       })
       .catch((error) => {
         console.error("Error fetching post count:", error);
       });
-  }, []); // Empty dependency array ensures the effect runs only once on component mount
+  }, []);
 
   return (
     <>
@@ -105,27 +121,13 @@ export default function AddPost() {
         <div className="flex justify-center items-center">
           <div className="max-w-lg w-full bg-white p-8 rounded-lg shadow-md">
             <h1 className="text-3xl font-bold mb-6 text-center">Add Post</h1>
-            {postCount >= 5 ? (
-              <div>
-                <p className="text-center text-gray-600">
-                  You've reached the maximum number of allowed posts.
-                </p>
-                <p className="text-center">
-                  Become a member to unlock more posting privileges.
-                </p>
-                <Link
-                  to="/membership"
-                  className="btn btn-success block mx-auto mt-4"
-                >
-                  Become a Member
-                </Link>
-              </div>
-            ) : (
+            {isMember || postCount < 5 ? (
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <input
                     type="text"
                     name="image"
+                    defaultValue={user?.photoURL}
                     placeholder="Author Image"
                     className="w-full input input-bordered"
                     required
@@ -135,6 +137,7 @@ export default function AddPost() {
                   <input
                     type="text"
                     name="name"
+                    defaultValue={user?.displayName}
                     placeholder="Author Name"
                     className="w-full input input-bordered"
                     required
@@ -144,6 +147,7 @@ export default function AddPost() {
                   <input
                     type="email"
                     name="email"
+                    defaultValue={user.email}
                     placeholder="Author Email"
                     className="w-full input input-bordered"
                     required
@@ -208,6 +212,21 @@ export default function AddPost() {
                   />
                 </div>
               </form>
+            ) : (
+              <div>
+                <p className="text-center text-gray-600">
+                  You've reached the maximum number of allowed posts.
+                </p>
+                <p className="text-center">
+                  Become a member to unlock more posting privileges.
+                </p>
+                <Link
+                  to="/membership"
+                  className="btn btn-success block mx-auto mt-4"
+                >
+                  Become a Member
+                </Link>
+              </div>
             )}
           </div>
         </div>

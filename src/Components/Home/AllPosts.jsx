@@ -56,7 +56,7 @@ export default function () {
         </div>
         <div className="mt-4">
           <nav>
-            <ul className="pagination">
+            <ul className="pagination flex gap-4">
               {[...Array(Math.ceil(posts.length / postsPerPage)).keys()].map(
                 (number) => (
                   <li key={number + 1} className="page-item">

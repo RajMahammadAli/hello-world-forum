@@ -18,6 +18,13 @@ import PrivateRoute from "./PrivateRoute/PrivateRoute.jsx";
 import { Helmet } from "react-helmet";
 import { HelmetProvider } from "react-helmet-async";
 import PostDetails from "./Components/PostDetails/PostDetails.jsx";
+import AdminDashBoard from "./Components/AdminDashBoard/AdminDashBoard.jsx";
+import ManageUsers from "./Components/AdminDashBoard/ManageUsers.jsx";
+import AdminProfile from "./Components/AdminDashBoard/AdminProfile.jsx";
+import ReportedComments from "./Components/AdminDashBoard/ReportedComments.jsx";
+import MakeAnnouncement from "./Components/AdminDashBoard/MakeAnnouncement.jsx";
+import AboutMe from "./Components/Dashboard/AboutMe.jsx";
+import MakeAdmin from "./MakeAdmin/MakeAdmin.jsx";
 
 const router = createBrowserRouter([
   {
@@ -77,10 +84,66 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "comments",
+        path: "comments/:id",
         element: (
           <PrivateRoute>
             <Comments></Comments>
+          </PrivateRoute>
+        ),
+        loader: ({ params }) =>
+          fetch(`http://localhost:5000/allPosts/${params.id}`),
+      },
+      {
+        path: "aboutme/:id",
+        element: (
+          <PrivateRoute>
+            <AboutMe></AboutMe>
+          </PrivateRoute>
+        ),
+        loader: ({ params }) =>
+          fetch(`http://localhost:5000/users/${params.id}`),
+      },
+    ],
+  },
+  {
+    path: "/adminDashboard",
+    element: (
+      <PrivateRoute>
+        <AdminDashBoard></AdminDashBoard>
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        path: "manageUsers",
+        element: (
+          <PrivateRoute>
+            <ManageUsers></ManageUsers>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "adminProfile",
+        element: (
+          <PrivateRoute>
+            <MakeAdmin>
+              <AdminProfile></AdminProfile>
+            </MakeAdmin>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "reportedComments",
+        element: (
+          <PrivateRoute>
+            <ReportedComments></ReportedComments>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "makeAnnouncement",
+        element: (
+          <PrivateRoute>
+            <MakeAnnouncement></MakeAnnouncement>
           </PrivateRoute>
         ),
       },
